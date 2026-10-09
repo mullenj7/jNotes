@@ -12,8 +12,8 @@ public interface UserServiceInterface {
 
     ResponseDTO getAllUsers();
 
-    ResponseDTO deleteUser(String userId);
+    ResponseDTO deleteUser(Long userId);
 
-    ResponseDTO getUserById(String userId);
+    ResponseDTO getUserById(Long userId);
 
 }

@@ -2,9 +2,9 @@ package com.jnotes.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +16,6 @@ import com.jnotes.services.interfaces.UserServiceInterface;
 @RequestMapping("/users")
 public class UserController {
 
-    //@Autowired
     private final UserServiceInterface userService;
 
     public UserController(final UserServiceInterface userService) {
@@ -30,11 +29,15 @@ public class UserController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<ResponseDTO> register(@RequestBody User user) {
-        ResponseDTO response = userService.createUser(user);
-        return ResponseEntity
-                .status(response.getStatusCode())
-                .body(response);
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseDTO> getUser(@PathVariable Long userId) {
+        ResponseDTO response = userService.getUserById(userId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ResponseDTO> deleteUser(@PathVariable Long userId) {
+        ResponseDTO response = userService.deleteUser(userId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

@@ -12,6 +12,8 @@ import com.jnotes.dto.LoginRequestDTO;
 import com.jnotes.dto.ResponseDTO;
 import com.jnotes.dto.UserDTO;
 import com.jnotes.entities.User;
+import com.jnotes.entities.Note;
+import com.jnotes.repositories.NoteRepository;
 import com.jnotes.repositories.UserRepository;
 import com.jnotes.services.interfaces.UserServiceInterface;
 import com.jnotes.utils.JWTUtils;
@@ -22,6 +24,8 @@ public class UserServiceImplementation implements UserServiceInterface {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private NoteRepository noteRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -60,13 +64,14 @@ public class UserServiceImplementation implements UserServiceInterface {
         ResponseDTO response = new ResponseDTO();
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new Exception("user Not found"));
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            var user = userRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new Exception("user Not found"));
 
             var token = jwtUtils.generateToken(user);
             response.setStatusCode(200);
             response.setToken(token);
-            response.setRole(user.getRole());
             response.setExpirationTime("7 Days");
             response.setMessage("successful");
 
@@ -98,13 +103,38 @@ public class UserServiceImplementation implements UserServiceInterface {
     }
 
     @Override
-    public ResponseDTO deleteUser(String userId) {
-        return new ResponseDTO();
+    public ResponseDTO getUserById(Long userId) {
+        ResponseDTO response = new ResponseDTO();
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new Exception());
+            UserDTO userDTO = Utils.mapUserEntityToUserDTO(user);
+            response.setUser(userDTO);
+            response.setStatusCode(200);
+            return response;
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error Getting User " + e.getMessage());
+            return response;
+        }
     }
 
     @Override
-    public ResponseDTO getUserById(String userId) {
-        return new ResponseDTO();
+    public ResponseDTO deleteUser(Long userId) { // need to delete all user notes too
+        ResponseDTO response = new ResponseDTO();
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new Exception());
+            List<Note> notes = user.getNotes();
+            userRepository.deleteById(userId);
+            for (int i = 0; i < notes.size(); i++) {
+                noteRepository.deleteById(notes.get(i).getId());
+            }
+            response.setStatusCode(200);
+            return response;
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error Deleting User " + e.getMessage());
+            return response;
+        }
     }
 
 }

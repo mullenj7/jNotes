@@ -1,7 +1,9 @@
 package com.jnotes.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
+import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
@@ -12,4 +14,6 @@ public class UserDTO {
     private String email;
     private String name;
     private String role;
+    //private List<NoteDTO> notes = new ArrayList<>();
+
 }
