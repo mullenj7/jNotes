@@ -66,14 +66,15 @@ public class UserServiceImplementation implements UserServiceInterface {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            var user = userRepository.findByEmail(loginRequest.getEmail())
+            User user = userRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(() -> new Exception("user Not found"));
-
+			UserDTO userDTO = Utils.mapUserEntityToUserDTO(user);
             var token = jwtUtils.generateToken(user);
             response.setStatusCode(200);
             response.setToken(token);
             response.setExpirationTime("7 Days");
             response.setMessage("successful");
+			response.setUser(userDTO);
 
         } catch (Exception e) {
 

@@ -1,43 +1,59 @@
 import React, { useState, useContext } from 'react';
 import { BrowserRouter } from "react-router-dom";
 import {
-    AppBar, Box, Toolbar, IconButton, ButtonBase,
-    Typography, MenuItem, Menu, Divider, Link,
+    AppBar, Box, Toolbar, IconButton, ButtonBase, Container,
+    Typography, MenuItem, Menu, Divider, Link, Button
 
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import BoltIcon from '@mui/icons-material/Bolt';
 
+import AppAppBar from '../AppBar';
 
 
 
 function AppComponent({ children, signOut, user, }) {
 
     return (
+        // <BrowserRouter>
+        //     <Box sx={{ minHeight: '100vh' }}>
+        //         <AppLayout
+        //             children={children}
+        //             signOut={signOut}
+        //             user={user}
+        //         >
+        //         </AppLayout>
+        //         {/* <Box sx={{ minHeight: 150, display: 'flex', justifyContent: 'space-evenly', alignItems: 'flex-end', pb: 4 }}>
+        //             <Typography variant='subtitle2'>
+        //                 Test
+        //             </Typography>
+        //             <Box sx={{}}>
+        //                 <Typography variant='subtitle2' sx={{ color: 'white' }}>
+        //                     {`Contact: `}
+        //                 </Typography>
+        //                 <Typography variant='subtitle2' >
+        //                     {` jasonmullen189@gmail.com`}
+        //                 </Typography>
+        //             </Box>
+
+        //         </Box> */}
+
+        //     </Box>
+        // </BrowserRouter>
+
         <BrowserRouter>
-            <Box sx={{ minHeight: '100vh' }}>
-                <AppLayout
-                    children={children}
-                    signOut={signOut}
-                    user={user}
+            <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
+                <AppAppBar />
+                <Container
+                    maxWidth="lg"
+                    component="main"
+                    sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, }}
                 >
-                </AppLayout>
-                {/* <Box sx={{ minHeight: 150, display: 'flex', justifyContent: 'space-evenly', alignItems: 'flex-end', pb: 4 }}>
-                    <Typography variant='subtitle2'>
-                        Test
-                    </Typography>
-                    <Box sx={{}}>
-                        <Typography variant='subtitle2' sx={{ color: 'white' }}>
-                            {`Contact: `}
-                        </Typography>
-                        <Typography variant='subtitle2' >
-                            {` jasonmullen189@gmail.com`}
-                        </Typography>
+                    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', }}>
+                        {children}
                     </Box>
-
-                </Box> */}
-
+                </Container>
             </Box>
         </BrowserRouter>
     );
@@ -67,6 +83,7 @@ function AppLayout({ children, signOut, user }) {
                             </Typography>
                         </ButtonBase>
                     </Box>
+                    <Button onClick={() => { navigate('/login') }} sx={{ bgcolor: 'red' }}>login</Button>
                     <IconButton
                         onClick={(event) => setAnchorEl(event.currentTarget)}
                     >
@@ -106,7 +123,7 @@ function AppLayout({ children, signOut, user }) {
                     </Menu>
                 </Toolbar>
             </AppBar>
-            <Box sx={{ flexGrow: 1, height: '100%', display: 'flex', flexDirection: 'column', bgcolor:'white' }}>
+            <Box sx={{ flexGrow: 1, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'white' }}>
                 {children}
             </Box>
         </Box >
