@@ -1,12 +1,11 @@
-import * as React from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { alpha, styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import { Box, AppBar, Toolbar, Button, IconButton, Typography, Menu } from '@mui/material';
+
 import Container from '@mui/material/Container';
+import PersonIcon from '@mui/icons-material/Person';
+
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
@@ -29,14 +28,24 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     padding: '8px 12px',
 }));
 
-export default function AppAppBar() {
+export default function AppAppBar({ userDetails, handleUserSignOut }) {
 
     const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const dropdownOpen = Boolean(anchorEl);
+
+    const handleSignOut = () => {
+        setAnchorEl(false)
+        handleUserSignOut();
+    }
+
+
 
     return (
         <AppBar
             position="static"
-            enableColorOnDark
+            //enableColorOnDark
             sx={{
                 boxShadow: 0,
                 bgcolor: 'transparent',
@@ -76,9 +85,33 @@ export default function AppAppBar() {
                             alignItems: 'center',
                         }}
                     >
-                        <Button color="primary" variant="outlined" size="small" onClick={() => { navigate('/login') }}>
-                            Sign in
-                        </Button>
+                        {userDetails && userDetails.email ?
+                            <><IconButton
+                                onClick={(event) => setAnchorEl(event.currentTarget)}
+                            >
+                                <PersonIcon sx={{}} />
+                            </IconButton><Menu
+                                id="client-settings"
+                                anchorEl={anchorEl}
+                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                keepMounted
+                                sx={{ p: 0, m: 0 }}
+                                open={dropdownOpen}
+                                onClose={() => setAnchorEl(false)}
+                            >
+
+                                    <MenuItem
+                                        onClick={handleSignOut}>
+                                        <Typography align="left" color='primary'>
+                                            {'Log Out'}
+                                        </Typography>
+                                    </MenuItem>
+                                </Menu></> :
+                            <Button color="primary" variant="outlined" size="small" onClick={() => { navigate('/login') }}>
+                                Sign in
+                            </Button>
+                        }
                         {/* <Button color="primary" variant="contained" size="small">
                             Sign up
                         </Button> */}

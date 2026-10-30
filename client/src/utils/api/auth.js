@@ -47,14 +47,10 @@ export const signIn = async (email, password) => {
                 })
             },
         );
-        if (response.status === 200) {
 
             const parsedResponse = await response.json();
             console.log(parsedResponse);    
-            return parsedResponse
-        }
-
-        throw response;
+            return parsedResponse 
     } catch (err) {
         console.error(err);
         throw err;

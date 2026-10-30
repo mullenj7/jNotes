@@ -78,7 +78,7 @@ public class UserServiceImplementation implements UserServiceInterface {
 
         } catch (Exception e) {
 
-            response.setStatusCode(500);
+            response.setStatusCode(600);
             response.setMessage("Error occurred during user login: " + e.getMessage());
         }
         return response;

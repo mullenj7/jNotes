@@ -1,17 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { Box, Dialog, Button, Divider, FormLabel, FormControl,FormControlLabel, Link, TextField, Stack, Typography, DialogTitle, DialogContent } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 
@@ -64,6 +55,7 @@ export default function SignIn(props) {
     const [passwordError, setPasswordError] = useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const { handleSignIn } = useContext(UserContext);
+    const [credentialPopup, setCredentialPopup] = useState(false)
     const navigate = useNavigate();
 
 
@@ -78,12 +70,11 @@ export default function SignIn(props) {
             email: data.get('email'),
             password: data.get('password'),
         });
-        await handleSignIn(data.get('email'), data.get('password'))
-        navigate('/home')
-        // if (token && token !== 'null' && token !== 'undefined') {
-        //     navigate('/home')
-        // }
-        // else throw new Error('Error signing in')
+        const response = await handleSignIn(data.get('email'), data.get('password'))
+        if (response) {
+            navigate('/home')
+        }
+        else setCredentialPopup(true)
     };
 
     const validateInputs = () => {
@@ -114,9 +105,9 @@ export default function SignIn(props) {
     };
 
     return (
-        <Box>
+        <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', }}>
             {/* <CssBaseline enableColorScheme /> */}
-            <SignInContainer direction="column" sx={{ justifyContent: 'space-between' }}>
+            <SignInContainer direction="column" sx={{ justifyContent: 'space-between', width: '100%' }}>
                 {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
                 <Card variant="outlined">
                     <Typography
@@ -201,6 +192,9 @@ export default function SignIn(props) {
                     </Box>
                 </Card>
             </SignInContainer>
+            <Dialog open={credentialPopup} onClose={() => { setCredentialPopup(false) }}>
+                      <DialogContent>Invalid Credentials</DialogContent>
+            </Dialog>
         </Box>
     );
 }

@@ -4,15 +4,17 @@ import { UserContext } from './UserContext';
 import { AppContext } from './AppContext';
 import { getUser } from '../utils/api/users'
 import { signIn, signUp } from '../utils/api/auth'
+import { getUserNotes,createNote } from '../utils/api/notes';
 
 function UsersProvider(props) {
     const { setLoading } = useContext(AppContext);
     const [userDetails, setUserDetails] = useState({});
     const [userSignedIn, setUserSignedIn] = useState(false);
+    const [userNotes, setUserNotes] = useState([]);
 
     const handleSignInChange = async () => {
         setLoading(true);
-
+        console.log('getting')
         if (userSignedIn === true) {
             await fetchUserDetails();
         }
@@ -22,10 +24,11 @@ function UsersProvider(props) {
 
 
     useEffect(() => {
+        console.log('ehck 22')
         setLoading(true);
         checkUserDetails();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, []); // happens on refresh
 
 
     useEffect(() => {
@@ -36,10 +39,11 @@ function UsersProvider(props) {
     const handleSignIn = async (email, password) => {
         const { token, user } = await signIn(email, password);
         if (!token || token === 'null' || token === 'undefined') {
-            throw new Error()
+            return false
         }
         localStorage.setItem("token", token)
         localStorage.setItem("id", user.id)
+        return true
     }
 
     const handleSignUp = async (body) => {
@@ -65,9 +69,6 @@ function UsersProvider(props) {
     const fetchUserDetails = async () => {
         try {
             const response = await getUser();
-            if (response.errorMessage) {
-                throw new Error(response.errorMessage);
-            }
             setUserDetails(response);
 
         } catch (error) {
@@ -77,6 +78,38 @@ function UsersProvider(props) {
         }
         return null;
     };
+
+    const getAllNotes = async () => {
+        try {
+            setLoading(true)
+            const response = await getUserNotes();
+            console.log(response)
+            setUserNotes((response));
+            setLoading(false)
+
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+            throw new Error(error);
+        }
+        return;
+    }
+
+    const saveNote = async (body) =>{
+         try {
+            //setLoading(true)
+            const response = await createNote(body);
+            console.log(response)
+            //setUserNotes(response);
+            //setLoading(false)
+
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+            throw new Error(error);
+        }
+        return;
+    }
 
     // const updateUserAttributes = async (attributes) => {
     //     try {
@@ -99,7 +132,8 @@ function UsersProvider(props) {
         <UserContext.Provider
             value={{
                 userDetails, setUserDetails, fetchUserDetails, checkUserDetails,
-                userSignedIn, setUserSignedIn, handleSignIn, handleSignUp
+                userSignedIn, setUserSignedIn, handleSignIn, handleSignUp,
+                userNotes, setUserNotes, getAllNotes,saveNote
                 //updateUserAttributes, 
             }}
         >

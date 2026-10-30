@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Divider,Typography, FormLabel, FormControl, Link, TextField, Stack } from '@mui/material'
+import { Box, Button, Divider, Typography, FormLabel, FormControl, Link, TextField, Stack } from '@mui/material'
 
 import { styled } from '@mui/material/styles';
 import MuiCard from '@mui/material/Card';
@@ -120,8 +120,8 @@ export default function SignUp(props) {
     };
 
     return (
-        <>
-            <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', }}>
+            <SignUpContainer direction="column" sx={{ justifyContent: 'space-between', width:'100%', }}>
                 <Card variant="outlined">
                     <Typography
                         component="h1"
@@ -140,10 +140,13 @@ export default function SignUp(props) {
                             <TextField
                                 autoComplete="name"
                                 name="name"
+                                type="text"
                                 required
                                 fullWidth
                                 id="name"
                                 placeholder="Jon Snow"
+                                                                variant="outlined"
+
                                 error={nameError}
                                 helperText={nameErrorMessage}
                                 color={nameError ? 'error' : 'primary'}
@@ -155,6 +158,7 @@ export default function SignUp(props) {
                                 required
                                 fullWidth
                                 id="email"
+                                type="email"
                                 placeholder="your@email.com"
                                 name="email"
                                 autoComplete="email"
@@ -206,6 +210,6 @@ export default function SignUp(props) {
                     </Box>
                 </Card>
             </SignUpContainer>
-        </>
+        </Box>
     );
 }

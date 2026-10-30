@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.FetchType;
 
 import java.time.LocalDateTime;
@@ -32,7 +34,9 @@ public class Note {
     private LocalDateTime DateCreated;
     private LocalDateTime LastUpdated;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
+
     private String title;
 
     @ManyToOne(fetch = FetchType.EAGER)
