@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { UserContext } from './UserContext';
 import { AppContext } from './AppContext';
 import { getUser } from '../utils/api/users'
-import { signIn, signUp } from '../utils/api/auth'
-import { getUserNotes,createNote } from '../utils/api/notes';
+import { signIn, signUp, isTokenValid } from '../utils/api/auth'
+import { getUserNotes, createNote } from '../utils/api/notes';
 
 function UsersProvider(props) {
     const { setLoading } = useContext(AppContext);
@@ -14,7 +14,6 @@ function UsersProvider(props) {
 
     const handleSignInChange = async () => {
         setLoading(true);
-        console.log('getting')
         if (userSignedIn === true) {
             await fetchUserDetails();
         }
@@ -50,12 +49,16 @@ function UsersProvider(props) {
         await signUp(body);
     }
 
+
     const checkUserDetails = async () => {
         try {
             const token = localStorage.getItem("token")
-            if (token && token !== "null" && token !== "undefined") {
+            if (token && token !== "null" && token !== "undefined" && isTokenValid(token)) {
                 setUserSignedIn(true);
-            } else setUserSignedIn(false);
+            } else {
+                localStorage.clear()
+                setUserSignedIn(false)
+            };
         }
         catch (e) {
             console.log(e);
@@ -95,8 +98,8 @@ function UsersProvider(props) {
         return;
     }
 
-    const saveNote = async (body) =>{
-         try {
+    const saveNote = async (body) => {
+        try {
             //setLoading(true)
             const response = await createNote(body);
             console.log(response)
@@ -133,7 +136,7 @@ function UsersProvider(props) {
             value={{
                 userDetails, setUserDetails, fetchUserDetails, checkUserDetails,
                 userSignedIn, setUserSignedIn, handleSignIn, handleSignUp,
-                userNotes, setUserNotes, getAllNotes,saveNote
+                userNotes, setUserNotes, getAllNotes, saveNote
                 //updateUserAttributes, 
             }}
         >
