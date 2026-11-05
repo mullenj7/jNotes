@@ -5,15 +5,19 @@ import {
     Typography, MenuItem, Menu, Divider, Link, Button
 
 } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import BoltIcon from '@mui/icons-material/Bolt';
 
 import AppAppBar from '../AppBar';
+import { UserContext } from '../../context/UserContext';
 
 
 
 function AppComponent({ children, signOut, user, }) {
+
+
 
     return (
         // <BrowserRouter>
@@ -43,20 +47,40 @@ function AppComponent({ children, signOut, user, }) {
         // </BrowserRouter>
 
         <BrowserRouter>
-            <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
-                <AppAppBar />
-                <Container
-                    maxWidth="lg"
-                    component="main"
-                    sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, }}
-                >
-                    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', }}>
-                        {children}
-                    </Box>
-                </Container>
-            </Box>
+            <AppLayoutComponent children={children} />
         </BrowserRouter>
     );
+}
+
+function AppLayoutComponent({ children }) {
+
+    const { userSignedIn, userDetails, setUserSignedIn, loading } = useContext(UserContext)
+    const navigate = useNavigate();
+
+
+
+    const handleSignOut = () => {
+        localStorage.clear()
+        setUserSignedIn(false)
+        navigate('/home', { replace: true });
+    }
+
+    return <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
+        <AppAppBar userDetails={userDetails} handleUserSignOut={handleSignOut} />
+        <Container
+            maxWidth="lg"
+            component="main"
+            sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, }}
+        >
+            {loading ? <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+                <CircularProgress aria-label="Loading…" />
+            </Box> :
+                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', }}>
+                    {children}
+                </Box>
+            }
+        </Container>
+    </Box>
 }
 
 function AppLayout({ children, signOut, user }) {

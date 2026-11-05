@@ -12,7 +12,7 @@ function App() {
   return (
     <AppContextProvider>
       <UsersProvider>
-        <AppComponent signOut={() => { console.log("hi") }} user={{}}>
+        <AppComponent >
           <Suspense  >
             <Routes>
               {routes.map((route, id) => (route.component ? (

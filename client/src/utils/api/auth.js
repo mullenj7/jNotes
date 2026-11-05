@@ -1,4 +1,4 @@
-
+import { jwtDecode } from 'jwt-decode'
 
 const API_DOMAIN = process.env.REACT_APP_API;
 const ENDPOINT = 'auth';
@@ -47,17 +47,19 @@ export const signIn = async (email, password) => {
                 })
             },
         );
-        if (response.status === 200) {
 
-            const parsedResponse = await response.json();
-            console.log(parsedResponse);    
-            return parsedResponse
-        }
-
-        throw response;
+        const parsedResponse = await response.json();
+        console.log(parsedResponse);
+        return parsedResponse
     } catch (err) {
         console.error(err);
         throw err;
     }
 }
 
+export const isTokenValid = (token) => {
+    const decoded = jwtDecode(token);
+    const exp = decoded.exp;
+    const now = new Date();
+    return now.getTime() <= (exp * 1000);
+}

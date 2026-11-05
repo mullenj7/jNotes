@@ -25,23 +25,23 @@ const HOTKEYS = {
 }
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
-const Note = () => {
+const Note = ({handleSave}) => {
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-    useEffect(() => { console.log('editor changed', editor.children) }, [editor])
+    //useEffect(() => { console.log('editor changed', editor.children) }, [editor])
 
 
 
     return (
-        <Slate editor={editor} initialValue={initialValue}>
+        <><Slate editor={editor} initialValue={initialValue}>
             <Toolbar>
                 <MarkButton format="bold" icon={<FormatBoldIcon />} />
                 <MarkButton format="italic" icon={<FormatItalicSharpIcon />} />
                 <MarkButton format="underline" icon={<FormatUnderlinedIcon />} />
                 <MarkButton format="code" icon={<CodeIcon />} />
                 {/* <BlockButton format="heading-one" icon={<FormatBoldIcon />} />
-                <BlockButton format="heading-two" icon={<FormatBoldIcon />} /> */}
+    <BlockButton format="heading-two" icon={<FormatBoldIcon />} /> */}
                 <BlockButton format="block-quote" icon={<FormatQuoteIcon />} />
                 <BlockButton format="numbered-list" icon={<FormatListNumberedIcon />} />
                 <BlockButton format="bulleted-list" icon={<FormatListBulletedIcon />} />
@@ -64,9 +64,8 @@ const Note = () => {
                             toggleMark(editor, mark)
                         }
                     }
-                }}
-            />
-        </Slate>
+                } } />
+        </Slate><Button onClick={()=>{handleSave(editor)}}>save</Button></>
     )
 }
 const toggleBlock = (editor, format) => {
