@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 
-export const Button = React.forwardRef(
+export const NoteButton = React.forwardRef(
   ({ className, active, reversed, ...props }, ref) => (
     <span
       {...props}
@@ -88,8 +88,8 @@ export const Toolbar = React.forwardRef(({ className, ...props }, ref) => (
       css`
         position: relative;
         padding: 1px 18px 17px;
-        margin: 0 -20px;
-        border-bottom: 2px solid #eee;
+        
+        border: 2px solid #eee;
         margin-bottom: 20px;
       `
     )}
