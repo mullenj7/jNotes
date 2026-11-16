@@ -14,7 +14,7 @@ const MiniNote = ({ note, handleClick }) => {
                     {note.title}
                 </Typography>
                 <Typography variant="h5" component="div">
-                    be.nev.o.lent
+                    {note.id}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>adjective</Typography>
                 <Typography variant="body2">

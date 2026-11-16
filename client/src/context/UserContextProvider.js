@@ -4,7 +4,7 @@ import { UserContext } from './UserContext';
 import { AppContext } from './AppContext';
 import { getUser } from '../utils/api/users'
 import { signIn, signUp, isTokenValid } from '../utils/api/auth'
-import { getUserNotes, createNote } from '../utils/api/notes';
+import { getUserNotes, createNote, updateNote } from '../utils/api/notes';
 
 function UsersProvider(props) {
     const { setLoading } = useContext(AppContext);
@@ -23,7 +23,6 @@ function UsersProvider(props) {
 
 
     useEffect(() => {
-        console.log('ehck 22')
         setLoading(true);
         checkUserDetails();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,6 +113,22 @@ function UsersProvider(props) {
         return;
     }
 
+    const updateNoteDetails = async (id, body) => {
+        try {
+            //setLoading(true)
+            const response = await updateNote(id, body);
+            console.log(response)
+            //setUserNotes(response);
+            //setLoading(false)
+
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+            throw new Error(error);
+        }
+        return;
+    }
+
     // const updateUserAttributes = async (attributes) => {
     //     try {
     //         const response = await updateUser(attributes);
@@ -136,7 +151,7 @@ function UsersProvider(props) {
             value={{
                 userDetails, setUserDetails, fetchUserDetails, checkUserDetails,
                 userSignedIn, setUserSignedIn, handleSignIn, handleSignUp,
-                userNotes, setUserNotes, getAllNotes, saveNote
+                userNotes, setUserNotes, getAllNotes, saveNote, updateNoteDetails
                 //updateUserAttributes, 
             }}
         >

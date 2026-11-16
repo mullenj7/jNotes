@@ -26,10 +26,10 @@ const NoteList = ({ notes, setNoteIndex }) => {
             <List component="nav">
                 {
                     notes && notes.length > 0 &&
-                    notes.map((n, i) => {
+                    notes.sort((a, b) => new Date(b.LastUpdated) - new Date(a.LastUpdated)).map((n, i) => {
                         return (
                             <ListItemButton selected={selectedIndex === i} onClick={() => handleListItemClick(i)} key={`note-list-${i}`}>
-                                <MiniNote note={n} handleClick={() => { console.log('clicked'); setNoteIndex(i) }} />
+                                <MiniNote note={n} handleClick={() => { setNoteIndex(i) }} />
                             </ListItemButton>
                         )
                     })

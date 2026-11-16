@@ -26,14 +26,13 @@ const HOTKEYS = {
 }
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
-const Note = ({ handleSave, selectedNote, setSelectedNote }) => {
+const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue }) => {
 
-    const initialValue = [{ "type": "paragraph", "children": [{ "text": "" }] }]
     const renderElement = useCallback(props => <Element {...props} />, [])
-    const [title, setTitle] = useState(selectedNote && selectedNote.title ? selectedNote.title : 'Title')
+    const [title, setTitle] = useState(selectedNote && selectedNote.title ? selectedNote.title : '')
     const [enableSave, setEnableSave] = useState(false)
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
-    const [noteContent, setNoteContent] = useState(initialValue)
+    const [noteContent, setNoteContent] = useState(initialNoteValue)
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
     useEffect(() => {
@@ -44,6 +43,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote }) => {
             setTitle(selectedNote.title)
             editor.onChange()
         }
+        setEnableSave(false)
     }, [selectedNote])
 
     const toggleBlock = (editor, format) => {
@@ -205,7 +205,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote }) => {
 
     return (
         <>
-            <Box sx={{ overflow: 'auto' }}>
+            <Box sx={{ overflow: 'auto', }}>
                 <TextField placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }}></TextField>
                 <Slate editor={editor} initialValue={noteContent}>
                     <Toolbar>
@@ -244,7 +244,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote }) => {
                 </Slate>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', flexGrow: 1 }}>
-                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor) }}>save</Button>
+                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor,title) }}>save</Button>
             </Box>
         </>
     )
