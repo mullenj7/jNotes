@@ -65,7 +65,6 @@ export const updateNote = async (noteId, body) => {
     try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("id");
-        console.log('udpateing')
         const response = await fetch(
             `${API_DOMAIN}/${ENDPOINT}/${userId}/${noteId}`,
             {
@@ -76,6 +75,31 @@ export const updateNote = async (noteId, body) => {
                     Authorization: token,
                 },
                 body: JSON.stringify(body),
+            },
+        );
+        if (response.status === 200) {
+            const parsedResponse = await response.json();
+            return parsedResponse;
+        }
+        throw response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+export const deleteNote = async (noteId) => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            `${API_DOMAIN}/${ENDPOINT}/${noteId}`,
+            {
+                method: 'DELETE',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: token,
+                },
             },
         );
         if (response.status === 200) {

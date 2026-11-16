@@ -4,7 +4,7 @@ import { UserContext } from './UserContext';
 import { AppContext } from './AppContext';
 import { getUser } from '../utils/api/users'
 import { signIn, signUp, isTokenValid } from '../utils/api/auth'
-import { getUserNotes, createNote, updateNote } from '../utils/api/notes';
+import { getUserNotes, createNote, updateNote, deleteNote } from '../utils/api/notes';
 
 function UsersProvider(props) {
     const { setLoading } = useContext(AppContext);
@@ -129,6 +129,21 @@ function UsersProvider(props) {
         return;
     }
 
+    const deleteUserNote = async (id) => {
+        try {
+            setLoading(true)
+            await deleteNote(id);
+            //setUserNotes(response);
+            setLoading(false)
+
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+            throw new Error(error);
+        }
+        return;
+    }
+
     // const updateUserAttributes = async (attributes) => {
     //     try {
     //         const response = await updateUser(attributes);
@@ -150,7 +165,7 @@ function UsersProvider(props) {
         <UserContext.Provider
             value={{
                 userDetails, setUserDetails, fetchUserDetails, checkUserDetails,
-                userSignedIn, setUserSignedIn, handleSignIn, handleSignUp,
+                userSignedIn, setUserSignedIn, handleSignIn, handleSignUp, deleteUserNote,
                 userNotes, setUserNotes, getAllNotes, saveNote, updateNoteDetails
                 //updateUserAttributes, 
             }}

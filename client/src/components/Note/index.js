@@ -15,8 +15,8 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import { TextField, Box, Button } from '@mui/material'
-
+import { TextField, Box, Button, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const HOTKEYS = {
     'mod+b': 'bold',
@@ -26,7 +26,7 @@ const HOTKEYS = {
 }
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
-const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue }) => {
+const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, setDeleteNoteDialogOpen, isNewNote=false }) => {
 
     const renderElement = useCallback(props => <Element {...props} />, [])
     const [title, setTitle] = useState(selectedNote && selectedNote.title ? selectedNote.title : '')
@@ -206,7 +206,10 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue }) =
     return (
         <>
             <Box sx={{ overflow: 'auto', }}>
-                <TextField placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }}></TextField>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <TextField placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }}></TextField>
+                    {!isNewNote && <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}><DeleteIcon color='error' /></IconButton>}
+                </Box>
                 <Slate editor={editor} initialValue={noteContent}>
                     <Toolbar>
                         <MarkButton format="bold" icon={<FormatBoldIcon />} />
@@ -244,7 +247,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue }) =
                 </Slate>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', flexGrow: 1 }}>
-                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor,title) }}>save</Button>
+                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor, title) }}>save</Button>
             </Box>
         </>
     )
