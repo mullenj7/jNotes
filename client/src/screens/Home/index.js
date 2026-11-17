@@ -14,6 +14,10 @@ const Home = () => {
     const [selectedNote, setSelectedNote] = useState([])
     const [deleteNoteDialogOpen, setDeleteNoteDialogOpen] = useState(false)
     const [searchText, setSearchText] = useState('')
+    const [enableSave, setEnableSave] = useState(false)
+    const [leaveNoteDialogOpen, setLeaveNoteDialogOpen] = useState(false)
+    const [nextNoteIndex, setNextNoteIndex] = useState(0)
+
     const [newNoteDialogOpen, setNewNoteDialogOpen] = useState(false)
     const initialNoteValue = [{ "type": "paragraph", "children": [{ "text": "" }] }]
 
@@ -72,24 +76,25 @@ const Home = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 8, maxHeight: '70vh' }}>
+            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', pt: 2, height: '70vh' }}>
                 <Box sx={{ bgcolor: 'blue', width: '20%', display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex' }}>
-                        <TextField placeholder='Search...' value={searchText} onChange={(event) => { setSearchText(event.target.value); }} sx={{}} />
-                        <IconButton onClick={() => { handleClickAddNote() }}><AddBoxOutlinedIcon fontSize="small" sx={{ color: 'white', p: 0, m: 0, }} /></IconButton>
+                    <Box sx={{ display: 'flex' , justifyContent:'space-between',bgcolor:'white'}}>
+                        <TextField placeholder='Search...' size='small' fullWidth value={searchText} onChange={(event) => { setSearchText(event.target.value); }} margin='none' />
+                        <IconButton onClick={() => { handleClickAddNote() }}><AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} /></IconButton>
                     </Box>
-                    <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} />
+                    <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex} />
                 </Box>
                 <Box sx={{ bgcolor: 'green', width: '80%', mx: 5, display: 'flex', flexDirection: 'column' }}>
                     {!newNoteDialogOpen &&
-                        <Note handleSave={handleSaveNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} setDeleteNoteDialogOpen={setDeleteNoteDialogOpen} />}
+                        <Note handleSave={handleSaveNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} setDeleteNoteDialogOpen={setDeleteNoteDialogOpen} enableSave={enableSave} setEnableSave={setEnableSave} />}
                 </Box>
             </Box>
             <Dialog open={newNoteDialogOpen} onClose={() => { setNewNoteDialogOpen(false) }} fullWidth maxWidth='md' sx={{}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: '60vh', justifyContent: 'flex-start' }}>
-                    <Note handleSave={handleCreateNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} isNewNote={true} />
+                    <Note handleSave={handleCreateNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} isNewNote={true} enableSave={enableSave} setEnableSave={setEnableSave} />
                 </Box>
             </Dialog>
+            <ConfirmationDialog title={'Unsaved Changes'} body={'Are you sure you want to leave without saving?'} closeText={'Cancel'} submitText={'Yes'} onSubmit={() => { setNoteIndex(nextNoteIndex); setLeaveNoteDialogOpen(false) }} dialogOpen={leaveNoteDialogOpen} onClose={() => { setLeaveNoteDialogOpen(false) }} />
             <ConfirmationDialog title={'Delete Note'} body={'Are you sure you want to delete note?'} closeText={'Cancel'} submitText={'Delete'} onSubmit={() => { handleDeleteNote() }} dialogOpen={deleteNoteDialogOpen} onClose={() => { setDeleteNoteDialogOpen(false) }} />
         </>
     )

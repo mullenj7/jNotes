@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useEffect, useState } from 'react'
 import { Editor, Node, Transforms, createEditor, select } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, Slate, useSlate, withReact } from 'slate-react'
-import { NoteButton, Icon, Toolbar } from '../NoteUtils'
+import { NoteButton, Toolbar } from '../NoteUtils'
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicSharpIcon from '@mui/icons-material/FormatItalicSharp';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -15,7 +15,7 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import { TextField, Box, Button, IconButton } from '@mui/material'
+import { TextField, Box, Button, IconButton, badgeClasses } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const HOTKEYS = {
@@ -26,11 +26,10 @@ const HOTKEYS = {
 }
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
-const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, setDeleteNoteDialogOpen, isNewNote=false }) => {
+const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, setDeleteNoteDialogOpen, isNewNote = false, enableSave, setEnableSave }) => {
 
     const renderElement = useCallback(props => <Element {...props} />, [])
     const [title, setTitle] = useState(selectedNote && selectedNote.title ? selectedNote.title : '')
-    const [enableSave, setEnableSave] = useState(false)
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const [noteContent, setNoteContent] = useState(initialNoteValue)
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
@@ -45,6 +44,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
         }
         setEnableSave(false)
     }, [selectedNote])
+
 
     const toggleBlock = (editor, format) => {
         if (!enableSave) {
@@ -115,6 +115,7 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
         if (isAlignElement(element)) {
             style.textAlign = element.align
         }
+        //style.padding =10
         switch (element.type) {
             case 'block-quote':
                 return (
@@ -205,19 +206,23 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
 
     return (
         <>
-            <Box sx={{ overflow: 'auto', }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <TextField placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }}></TextField>
-                    {!isNewNote && <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}><DeleteIcon color='error' /></IconButton>}
+            <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: 'yellow', flexGrow: 1, overflow: 'auto', p: 0, m: 0 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
+                    <TextField variant='filled' size='small' hiddenLabel placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }} sx={{ p: 0, m: 0 }} />
+                    {!isNewNote &&
+                        <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}>
+                            <DeleteIcon color='error' />
+                        </IconButton>
+                    }
                 </Box>
-                <Slate editor={editor} initialValue={noteContent}>
+                <Slate editor={editor} initialValue={noteContent} >
                     <Toolbar>
                         <MarkButton format="bold" icon={<FormatBoldIcon />} />
                         <MarkButton format="italic" icon={<FormatItalicSharpIcon />} />
                         <MarkButton format="underline" icon={<FormatUnderlinedIcon />} />
                         <MarkButton format="code" icon={<CodeIcon />} />
                         {/* <BlockButton format="heading-one" icon={<FormatBoldIcon />} />
-    <BlockButton format="heading-two" icon={<FormatBoldIcon />} /> */}
+                        <BlockButton format="heading-two" icon={<FormatBoldIcon />} /> */}
                         <BlockButton format="block-quote" icon={<FormatQuoteIcon />} />
                         <BlockButton format="numbered-list" icon={<FormatListNumberedIcon />} />
                         <BlockButton format="bulleted-list" icon={<FormatListBulletedIcon />} />
@@ -231,7 +236,8 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
                         renderLeaf={renderLeaf}
                         placeholder="Enter some rich text…"
                         spellCheck
-                        autoFocus
+                        //autoFocus
+                        style={{ backgroundColor: 'orange', flexGrow: 1, overflow: 'auto', outline: 'none', margin: 10 }}
                         onKeyDown={event => {
                             if (!enableSave) {
                                 setEnableSave(true)
@@ -244,9 +250,10 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
                                 }
                             }
                         }} />
+
                 </Slate>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', bgcolor: 'purple' }}>
                 <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor, title) }}>save</Button>
             </Box>
         </>

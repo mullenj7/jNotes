@@ -2,14 +2,18 @@ import React, { useEffect, useContext, useState } from 'react'
 import { Box, List, ListItemButton, ListItemText } from '@mui/material'
 import MiniNote from '../../MiniNote'
 
-const NoteList = ({ notes, setNoteIndex, noteIndex }) => {
+const NoteList = ({ notes, setNoteIndex, noteIndex,enableSave,setLeaveNoteDialogOpen, setNextNoteIndex }) => {
 
     //const { checkUserDetails, userDetails, getAllNotes, userNotes, saveNote } = useContext(UserContext);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const handleListItemClick = (index) => {
-        setSelectedIndex(index);
-        setNoteIndex(index)
+        if (!enableSave){
+         setNoteIndex(index)
+        }
+        else {
+            setNextNoteIndex(index)
+            setLeaveNoteDialogOpen(true)}
     };
 
     return (
@@ -29,7 +33,7 @@ const NoteList = ({ notes, setNoteIndex, noteIndex }) => {
                     notes.sort((a, b) => new Date(b.LastUpdated) - new Date(a.LastUpdated)).map((n, i) => {
                         return (
                             // <ListItemButton key={`note-list-${i}`}>
-                                <MiniNote note={n} handleClick={() => { setNoteIndex(i) }} index={i} selectedIndex={noteIndex} key={`note-list-item-${i}`}/>
+                                <MiniNote note={n} handleClick={() => { handleListItemClick(i) }} index={i} selectedIndex={noteIndex} key={`note-list-item-${i}`}/>
                             // </ListItemButton>
                         )
                     })

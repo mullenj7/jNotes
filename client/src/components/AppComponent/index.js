@@ -68,13 +68,14 @@ function AppLayoutComponent({ children }) {
     return <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
         <AppAppBar userDetails={userDetails} handleUserSignOut={handleSignOut} />
         <Container
-            maxWidth="lg"
+            maxWidth="xl"
             component="main"
             sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, }}
         >
-            {loading ? <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
-                <CircularProgress aria-label="Loading…" />
-            </Box> :
+            {loading ?
+                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+                    <CircularProgress aria-label="Loading…" />
+                </Box> :
                 <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', }}>
                     {children}
                 </Box>
@@ -83,75 +84,75 @@ function AppLayoutComponent({ children }) {
     </Box>
 }
 
-function AppLayout({ children, signOut, user }) {
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState(null);
-    const dropdownOpen = Boolean(anchorEl);
+// function AppLayout({ children, signOut, user }) {
+//     const navigate = useNavigate();
+//     const [anchorEl, setAnchorEl] = useState(null);
+//     const dropdownOpen = Boolean(anchorEl);
 
 
-    const handleSignIn = () => {
+//     const handleSignIn = () => {
 
-    }
-    const handleSignOut = () => {
+//     }
+//     const handleSignOut = () => {
 
-    }
+//     }
 
-    return (
-        <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
-            <AppBar position='static' elevation={0} sx={{ py: 1, }}>
-                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box>
-                        <ButtonBase sx={{ ml: 5 }} onClick={() => { navigate('/home') }}>
-                            <Typography variant="h3" color='primary' sx={{ color: 'white', typography: { lg: 'h3', xl: 'h3' } }} >
-                                JNotes
-                            </Typography>
-                        </ButtonBase>
-                    </Box>
-                    <Button onClick={() => { navigate('/login') }} sx={{ bgcolor: 'red' }}>login</Button>
-                    <IconButton
-                        onClick={(event) => setAnchorEl(event.currentTarget)}
-                    >
-                        <PersonIcon sx={{ color: 'white' }} />
-                    </IconButton>
-                    <Menu
-                        id="client-settings"
-                        anchorEl={anchorEl}
-                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                        keepMounted
-                        sx={{ p: 0, m: 0 }}
-                        open={dropdownOpen}
-                        onClose={() => setAnchorEl(false)}
-                    >
-                        {user && user.signInDetails && user.signInDetails.loginId &&
-                            <>
-                                <Typography align="left" sx={{ p: 2 }}>{user.signInDetails.loginId}</Typography>
-                                <Divider variant="middle" />
-                                <MenuItem
-                                    onClick={() => {
-                                        navigate('/decks', { replace: true }); setAnchorEl(false);
-                                    }}>
-                                    <Typography align="left" color='primary'>
-                                        My Decks
-                                    </Typography>
+//     return (
+//         <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', }}>
+//             <AppBar position='static' elevation={0} sx={{ py: 1, }}>
+//                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+//                     <Box>
+//                         <ButtonBase sx={{ ml: 5 }} onClick={() => { navigate('/home') }}>
+//                             <Typography variant="h3" color='primary' sx={{ color: 'white', typography: { lg: 'h3', xl: 'h3' } }} >
+//                                 JNotes
+//                             </Typography>
+//                         </ButtonBase>
+//                     </Box>
+//                     <Button onClick={() => { navigate('/login') }} sx={{ bgcolor: 'red' }}>login</Button>
+//                     <IconButton
+//                         onClick={(event) => setAnchorEl(event.currentTarget)}
+//                     >
+//                         <PersonIcon sx={{ color: 'white' }} />
+//                     </IconButton>
+//                     <Menu
+//                         id="client-settings"
+//                         anchorEl={anchorEl}
+//                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+//                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+//                         keepMounted
+//                         sx={{ p: 0, m: 0 }}
+//                         open={dropdownOpen}
+//                         onClose={() => setAnchorEl(false)}
+//                     >
+//                         {user && user.signInDetails && user.signInDetails.loginId &&
+//                             <>
+//                                 <Typography align="left" sx={{ p: 2 }}>{user.signInDetails.loginId}</Typography>
+//                                 <Divider variant="middle" />
+//                                 <MenuItem
+//                                     onClick={() => {
+//                                         navigate('/decks', { replace: true }); setAnchorEl(false);
+//                                     }}>
+//                                     <Typography align="left" color='primary'>
+//                                         My Decks
+//                                     </Typography>
 
-                                </MenuItem>
-                            </>
-                        }
-                        <MenuItem
-                            onClick={user ? handleSignOut : handleSignIn}>
-                            <Typography align="left" color='primary'>
-                                {user ? 'Log Out' : 'Log In'}
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
-                </Toolbar>
-            </AppBar>
-            <Box sx={{ flexGrow: 1, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'white' }}>
-                {children}
-            </Box>
-        </Box >
-    )
-}
+//                                 </MenuItem>
+//                             </>
+//                         }
+//                         <MenuItem
+//                             onClick={user ? handleSignOut : handleSignIn}>
+//                             <Typography align="left" color='primary'>
+//                                 {user ? 'Log Out' : 'Log In'}
+//                             </Typography>
+//                         </MenuItem>
+//                     </Menu>
+//                 </Toolbar>
+//             </AppBar>
+//             <Box sx={{ flexGrow: 1, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'white' }}>
+//                 {children}
+//             </Box>
+//         </Box >
+//     )
+// }
 
 export default AppComponent;

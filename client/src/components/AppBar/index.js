@@ -50,11 +50,11 @@ export default function AppAppBar({ userDetails, handleUserSignOut }) {
                 boxShadow: 0,
                 bgcolor: 'transparent',
                 backgroundImage: 'none',
-                mt: 'calc(var(--template-frame-height, 0px) + 28px)',
+                mt: 'calc(var(--template-frame-height, 0px) + 8px)',
             }}
         >
-            <Container maxWidth="lg">
-                <StyledToolbar variant="dense" disableGutters>
+            <Container maxWidth="xl" sx={{}}>
+                <StyledToolbar variant="dense" >
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
                         {/* <Sitemark /> */}
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -86,20 +86,22 @@ export default function AppAppBar({ userDetails, handleUserSignOut }) {
                         }}
                     >
                         {userDetails && userDetails.email ?
-                            <><IconButton
-                                onClick={(event) => setAnchorEl(event.currentTarget)}
-                            >
-                                <PersonIcon sx={{}} />
-                            </IconButton><Menu
-                                id="client-settings"
-                                anchorEl={anchorEl}
-                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                keepMounted
-                                sx={{ p: 0, m: 0 }}
-                                open={dropdownOpen}
-                                onClose={() => setAnchorEl(false)}
-                            >
+                            <>
+                                <IconButton
+                                    onClick={(event) => setAnchorEl(event.currentTarget)}
+                                >
+                                    <PersonIcon sx={{}} />
+                                </IconButton>
+                                <Menu
+                                    id="client-settings"
+                                    anchorEl={anchorEl}
+                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                    keepMounted
+                                    sx={{ p: 0, m: 0 }}
+                                    open={dropdownOpen}
+                                    onClose={() => setAnchorEl(false)}
+                                >
 
                                     <MenuItem
                                         onClick={handleSignOut}>
@@ -107,7 +109,8 @@ export default function AppAppBar({ userDetails, handleUserSignOut }) {
                                             {'Log Out'}
                                         </Typography>
                                     </MenuItem>
-                                </Menu></> :
+                                </Menu>
+                            </> :
                             <Button color="primary" variant="outlined" size="small" onClick={() => { navigate('/login') }}>
                                 Sign in
                             </Button>
