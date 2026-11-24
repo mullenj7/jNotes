@@ -234,10 +234,10 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
                     <Editable
                         renderElement={renderElement}
                         renderLeaf={renderLeaf}
-                        placeholder="Enter some rich text…"
-                        spellCheck
+                        placeholder=""
+                        //spellCheck
                         //autoFocus
-                        style={{ backgroundColor: 'orange', flexGrow: 1, overflow: 'auto', outline: 'none', margin: 10 }}
+                        style={{ backgroundColor: 'orange', flexGrow: 1, overflow: 'auto', outline: 'none', margin: 12 }}
                         onKeyDown={event => {
                             if (!enableSave) {
                                 setEnableSave(true)

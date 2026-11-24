@@ -76,21 +76,22 @@ const Home = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', pt: 2, height: '70vh' }}>
-                <Box sx={{ bgcolor: 'blue', width: '20%', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 2, height: '70vh' }}>
+                <Box sx={{ bgcolor: 'blue', width: '20%', display: 'flex', flexDirection: 'column',mx: 2 }}>
                     <Box sx={{ display: 'flex' , justifyContent:'space-between',bgcolor:'white'}}>
                         <TextField placeholder='Search...' size='small' fullWidth value={searchText} onChange={(event) => { setSearchText(event.target.value); }} margin='none' />
                         <IconButton onClick={() => { handleClickAddNote() }}><AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} /></IconButton>
                     </Box>
-                    <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex} />
+                    <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex} 
+                    initialNoteValue={initialNoteValue} searchText={searchText}/>
                 </Box>
-                <Box sx={{ bgcolor: 'green', width: '80%', mx: 5, display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ bgcolor: 'green', width: '80%', mx: 2, display: 'flex', flexDirection: 'column' }}>
                     {!newNoteDialogOpen &&
                         <Note handleSave={handleSaveNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} setDeleteNoteDialogOpen={setDeleteNoteDialogOpen} enableSave={enableSave} setEnableSave={setEnableSave} />}
                 </Box>
             </Box>
             <Dialog open={newNoteDialogOpen} onClose={() => { setNewNoteDialogOpen(false) }} fullWidth maxWidth='md' sx={{}}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: '60vh', justifyContent: 'flex-start' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: '70vh', justifyContent: 'flex-start' }}>
                     <Note handleSave={handleCreateNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} isNewNote={true} enableSave={enableSave} setEnableSave={setEnableSave} />
                 </Box>
             </Dialog>
