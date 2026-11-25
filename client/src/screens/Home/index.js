@@ -31,20 +31,23 @@ const Home = () => {
     const initialNoteValue = [{ "type": "paragraph", "children": [{ "text": "" }] }]
 
 
-    const handleSaveNote = async (editorNote, title) => {
+    const handleSaveNote = async (editorNote, title, favourite) => {
         const body = {
             title: title,
-            content: JSON.stringify(editorNote.children)
+            content: JSON.stringify(editorNote.children),
+            favourite: favourite
         }
+        console.log('body is ',body)
         await updateNoteDetails(selectedNote.id, body)
         await getAllNotes()
     }
 
 
-    const handleCreateNote = async (editorNote, title) => {
+    const handleCreateNote = async (editorNote, title, favourite) => {
         const body = {
             title: title,
-            content: JSON.stringify(editorNote.children)
+            content: JSON.stringify(editorNote.children),
+            favourite: favourite
         }
         await saveNote(body)
         await getAllNotes()
@@ -98,10 +101,10 @@ const Home = () => {
         <>
             <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 5, height: '70vh', filter: newNoteDialogOpen ? 'blur(2px)' : 'none' }}>
                 <Box sx={{ bgcolor: 'blue', width: drawerOpen ? '20%' : '5%', display: 'flex', flexDirection: 'column', ml: 3 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', bgcolor: 'white' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', bgcolor: 'white', }}>
                         {drawerOpen ?
                             <>
-                                <Button variant='outlined' fullWidth onClick={() => { setFullScreenNotesDialogOpen(true); }}>Browse</Button>
+                                <Button variant='outlined' fullWidth onClick={() => { setFullScreenNotesDialogOpen(true); }}>Browse Notes</Button>
                                 <IconButton onClick={() => { handleClickAddNote(); }}>
                                     <AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
                                 </IconButton>
@@ -138,7 +141,7 @@ const Home = () => {
             </Dialog>
             <ConfirmationDialog title={'Unsaved Changes'} body={'Are you sure you want to leave without saving?'} closeText={'Cancel'} submitText={'Yes'} onSubmit={() => { setNewNoteState({}); setLeaveNewNoteDialogOpen(false); setNewNoteDialogOpen(false) }} dialogOpen={leaveNewNoteDialogOpen} onClose={() => { setLeaveNewNoteDialogOpen(false) }} />
             <ConfirmationDialog title={'Unsaved Changes'} body={'Are you sure you want to leave without saving?'} closeText={'Cancel'} submitText={'Yes'} onSubmit={() => { setNoteIndex(nextNoteIndex); setLeaveNoteDialogOpen(false) }} dialogOpen={leaveNoteDialogOpen} onClose={() => { setLeaveNoteDialogOpen(false) }} />
-            <ConfirmationDialog title={'Delete Note'} body={'Are you sure you want to delete note?'} closeText={'Cancel'} submitText={'Delete'} onSubmit={() => { handleDeleteNote() }} dialogOpen={deleteNoteDialogOpen} onClose={() => { setDeleteNoteDialogOpen(false) }} />
+            <ConfirmationDialog title={'Delete Note'} body={'Are you sure you want to delete this note?'} closeText={'Cancel'} submitText={'Delete'} onSubmit={() => { handleDeleteNote() }} dialogOpen={deleteNoteDialogOpen} onClose={() => { setDeleteNoteDialogOpen(false) }} />
         </>
     )
 }

@@ -15,8 +15,10 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import { TextField, Box, Button, IconButton, badgeClasses } from '@mui/material'
+import { TextField, Box, Button, IconButton, badgeClasses, Tooltip } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import GradeIcon from '@mui/icons-material/Grade';
 
 const HOTKEYS = {
     'mod+b': 'bold',
@@ -32,9 +34,11 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
     const [title, setTitle] = useState(selectedNote && selectedNote.title ? selectedNote.title : '')
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const [noteContent, setNoteContent] = useState(initialNoteValue)
+    const [favourite, setFavourite] = useState(selectedNote && selectedNote.favourite ? selectedNote.favourite : false)
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
     useEffect(() => {
+        console.log('note is ', selectedNote)
         if (selectedNote && selectedNote.content) {
             const content = JSON.parse(selectedNote.content)
             setNoteContent(content)
@@ -42,6 +46,10 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
             setTitle(selectedNote.title)
             editor.onChange()
         }
+        if (selectedNote.favourite) {
+            setFavourite(selectedNote)
+        }
+        else setFavourite(false)
         setEnableSave(false)
     }, [selectedNote])
 
@@ -206,14 +214,23 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: 'yellow', flexGrow: 1, overflow: 'auto', p: 0, m: 0, }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: 'pink', flexGrow: 1, overflow: 'auto', p: 0, m: 0, }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
                     <TextField variant='filled' size='small' hiddenLabel placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); if (!enableSave) { setEnableSave(true) } }} sx={{ p: 0, m: 0 }} />
-                    {!isNewNote &&
-                        <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}>
-                            <DeleteIcon color='error' />
-                        </IconButton>
-                    }
+                    <Box>
+                        <Tooltip title={'Favourite'}>
+                            <IconButton onClick={() => { setFavourite(!favourite); if (!enableSave) { setEnableSave(true) } }} sx={{ color: 'gold' }}>
+                                {favourite ? <GradeIcon /> : <StarBorderIcon />}
+                            </IconButton>
+                        </Tooltip>
+                        {!isNewNote &&
+                            <Tooltip title={'Delete Note'}>
+                                <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}>
+                                    <DeleteIcon color='error' />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                    </Box>
                 </Box>
                 <Slate editor={editor} initialValue={noteContent} >
                     <Toolbar>
@@ -254,47 +271,10 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
                 </Slate>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', bgcolor: 'purple' }}>
-                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor, title) }}>save</Button>
+                <Button variant='contained' disabled={!enableSave} onClick={() => { handleSave(editor, title, favourite) }}>save</Button>
             </Box>
         </>
     )
 }
 
-
-
-// const initialValue = [
-//     {
-//         type: 'paragraph',
-//         children: [
-//             { text: 'This is editable ' },
-//             { text: 'rich', bold: true },
-//             { text: ' text, ' },
-//             { text: 'much', italic: true },
-//             { text: ' better than a ' },
-//             { text: '<textarea>', code: true },
-//             { text: '!' },
-//         ],
-//     },
-//     {
-//         type: 'paragraph',
-//         children: [
-//             {
-//                 text: "Since it's rich text, you can do things like turn a selection of text ",
-//             },
-//             { text: 'bold', bold: true },
-//             {
-//                 text: ', or add a semantically rendered block quote in the middle of the page, like this:',
-//             },
-//         ],
-//     },
-//     {
-//         type: 'block-quote',
-//         children: [{ text: 'A wise quote.' }],
-//     },
-//     {
-//         type: 'paragraph',
-//         align: 'center',
-//         children: [{ text: 'Try it out for yourself!' }],
-//     },
-// ]
 export default Note

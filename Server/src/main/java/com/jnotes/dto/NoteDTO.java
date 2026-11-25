@@ -20,5 +20,5 @@ public class NoteDTO {
     private UserDTO user;
     private String content;
     private String title;
-    private String favourite;
+    private Boolean favourite;
 }

@@ -38,7 +38,7 @@ public class Note {
     private String content;
 
     private String title;
-    private String favourite;
+    private Boolean favourite;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

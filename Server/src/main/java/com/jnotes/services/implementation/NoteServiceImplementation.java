@@ -86,6 +86,7 @@ public class NoteServiceImplementation implements NoteServiceInterface {
             oldNote.setLastUpdated(currentTime);
             oldNote.setContent(note.getContent());
             oldNote.setTitle(note.getTitle());
+            oldNote.setFavourite(note.getFavourite());
             noteRepository.save(oldNote);
             response.setMessage("Note Saved");
             response.setStatusCode(200);
