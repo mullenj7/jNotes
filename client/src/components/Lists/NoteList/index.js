@@ -1,10 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { Box, List, ListItemButton, ListItemText } from '@mui/material'
+import { Box, List, ListItemButton, ListItemText, Stack } from '@mui/material'
 import MiniNote from '../../MiniNote'
 
 const NoteList = ({ notes, setNoteIndex, noteIndex, enableSave, setLeaveNoteDialogOpen, setNextNoteIndex, initialNoteValue, searchText }) => {
-
-    //const { checkUserDetails, userDetails, getAllNotes, userNotes, saveNote } = useContext(UserContext);
 
     const handleListItemClick = (index) => {
         if (!enableSave) {
@@ -26,8 +24,8 @@ const NoteList = ({ notes, setNoteIndex, noteIndex, enableSave, setLeaveNoteDial
         //         })
         //     }
         // </Box>
-        <Box style={{ overflow: 'auto' }}>
-            <List>
+        <Box style={{ overflow: 'auto',}}>
+            <List sx={{}}>
                 {
                     notes && notes.length > 0 &&
                     notes.sort((a, b) => new Date(b.LastUpdated) - new Date(a.LastUpdated)).map((n, i) => {

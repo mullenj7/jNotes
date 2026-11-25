@@ -206,9 +206,9 @@ const Note = ({ handleSave, selectedNote, setSelectedNote, initialNoteValue, set
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: 'yellow', flexGrow: 1, overflow: 'auto', p: 0, m: 0 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: 'yellow', flexGrow: 1, overflow: 'auto', p: 0, m: 0, }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
-                    <TextField variant='filled' size='small' hiddenLabel placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); }} sx={{ p: 0, m: 0 }} />
+                    <TextField variant='filled' size='small' hiddenLabel placeholder='Title' value={title} onChange={(event) => { setTitle(event.target.value); if (!enableSave) { setEnableSave(true) } }} sx={{ p: 0, m: 0 }} />
                     {!isNewNote &&
                         <IconButton onClick={() => { setDeleteNoteDialogOpen(true) }}>
                             <DeleteIcon color='error' />

@@ -1,22 +1,31 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { Box, IconButton, TextField, Dialog } from '@mui/material'
+import { Box, IconButton, TextField, Dialog, Drawer, DrawerHeader, Button } from '@mui/material'
+import { styled, useTheme } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-
+import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
 import Note from '../../components/Note'
 import NoteList from '../../components/Lists/NoteList'
 import { UserContext } from '../../context/UserContext'
 import ConfirmationDialog from '../../components/Dialogs/ConfirmationDialog';
+import FullscreenNotePage from '../../components/Dialogs/FullscreenNotePage';
 
 const Home = () => {
 
     const { checkUserDetails, userDetails, getAllNotes, userNotes, saveNote, updateNoteDetails, deleteUserNote } = useContext(UserContext);
     const [noteIndex, setNoteIndex] = useState(0);
     const [selectedNote, setSelectedNote] = useState([])
+    const [newNoteState, setNewNoteState] = useState({})
     const [deleteNoteDialogOpen, setDeleteNoteDialogOpen] = useState(false)
-    const [searchText, setSearchText] = useState('')
+    const [fullscreenSearchText, setFullScreenSearchText] = useState('')
+
     const [enableSave, setEnableSave] = useState(false)
     const [leaveNoteDialogOpen, setLeaveNoteDialogOpen] = useState(false)
+    const [leaveNewNoteDialogOpen, setLeaveNewNoteDialogOpen] = useState(false)
     const [nextNoteIndex, setNextNoteIndex] = useState(0)
+    const [drawerOpen, setDrawerOpen] = useState(true)
+    const [fullScreenNotesDialogOpen, setFullScreenNotesDialogOpen] = useState(false)
 
     const [newNoteDialogOpen, setNewNoteDialogOpen] = useState(false)
     const initialNoteValue = [{ "type": "paragraph", "children": [{ "text": "" }] }]
@@ -50,8 +59,16 @@ const Home = () => {
     }
 
     const handleClickAddNote = () => {
-        setSelectedNote({})
+        //setSelectedNote({})
         setNewNoteDialogOpen(true)
+    }
+
+    const handleCloseDialog = () => {
+        if (!enableSave) {
+            setNewNoteState({})
+            setNewNoteDialogOpen(false)
+        }
+        else setLeaveNewNoteDialogOpen(true)
     }
 
     useEffect(() => {
@@ -74,27 +91,52 @@ const Home = () => {
     }, [userDetails])
 
 
+
+
+
     return (
         <>
-            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 2, height: '70vh' }}>
-                <Box sx={{ bgcolor: 'blue', width: '20%', display: 'flex', flexDirection: 'column',mx: 2 }}>
-                    <Box sx={{ display: 'flex' , justifyContent:'space-between',bgcolor:'white'}}>
-                        <TextField placeholder='Search...' size='small' fullWidth value={searchText} onChange={(event) => { setSearchText(event.target.value); }} margin='none' />
-                        <IconButton onClick={() => { handleClickAddNote() }}><AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} /></IconButton>
+            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 5, height: '70vh', filter: newNoteDialogOpen ? 'blur(2px)' : 'none' }}>
+                <Box sx={{ bgcolor: 'blue', width: drawerOpen ? '20%' : '5%', display: 'flex', flexDirection: 'column', ml: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', bgcolor: 'white' }}>
+                        {drawerOpen ?
+                            <>
+                                <Button variant='outlined' fullWidth onClick={() => { setFullScreenNotesDialogOpen(true); }}>Browse</Button>
+                                <IconButton onClick={() => { handleClickAddNote(); }}>
+                                    <AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
+                                </IconButton>
+                                <IconButton onClick={() => { setDrawerOpen(!drawerOpen); }}>
+                                    <ChevronLeftIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
+                                </IconButton>
+                            </>
+                            :
+                            <IconButton onClick={() => { setDrawerOpen(!drawerOpen) }}>
+                                <ChevronRightIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
+                            </IconButton>}
                     </Box>
-                    <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex} 
-                    initialNoteValue={initialNoteValue} searchText={searchText}/>
+                    {/* <Collapse orientation='horizontal' in={drawerOpen} > */}
+                    {drawerOpen &&
+                        <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex}
+                            initialNoteValue={initialNoteValue} />
+                    }
+                    {/* </Collapse> */}
+
                 </Box>
-                <Box sx={{ bgcolor: 'green', width: '80%', mx: 2, display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ bgcolor: 'green', width: drawerOpen ? '80%' : '95%', mr: 3, display: 'flex', flexDirection: 'column' }}>
                     {!newNoteDialogOpen &&
                         <Note handleSave={handleSaveNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} setDeleteNoteDialogOpen={setDeleteNoteDialogOpen} enableSave={enableSave} setEnableSave={setEnableSave} />}
                 </Box>
             </Box>
-            <Dialog open={newNoteDialogOpen} onClose={() => { setNewNoteDialogOpen(false) }} fullWidth maxWidth='md' sx={{}}>
+            <Dialog open={newNoteDialogOpen} onClose={() => { handleCloseDialog() }} fullWidth maxWidth='md' sx={{}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: '70vh', justifyContent: 'flex-start' }}>
-                    <Note handleSave={handleCreateNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} isNewNote={true} enableSave={enableSave} setEnableSave={setEnableSave} />
+                    <Note handleSave={handleCreateNote} selectedNote={newNoteState} setSelectedNote={setNewNoteState} initialNoteValue={initialNoteValue} isNewNote={true} enableSave={enableSave} setEnableSave={setEnableSave} />
                 </Box>
             </Dialog>
+            <Dialog open={fullScreenNotesDialogOpen} onClose={() => { setFullScreenSearchText(''); setFullScreenNotesDialogOpen(false) }} fullWidth maxWidth='lg' sx={{}}>
+                <FullscreenNotePage notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setNextNoteIndex={setNextNoteIndex}
+                    initialNoteValue={initialNoteValue} searchText={fullscreenSearchText} setSearchText={setFullScreenSearchText} setFullScreenNotesDialogOpen={setFullScreenNotesDialogOpen} />
+            </Dialog>
+            <ConfirmationDialog title={'Unsaved Changes'} body={'Are you sure you want to leave without saving?'} closeText={'Cancel'} submitText={'Yes'} onSubmit={() => { setNewNoteState({}); setLeaveNewNoteDialogOpen(false); setNewNoteDialogOpen(false) }} dialogOpen={leaveNewNoteDialogOpen} onClose={() => { setLeaveNewNoteDialogOpen(false) }} />
             <ConfirmationDialog title={'Unsaved Changes'} body={'Are you sure you want to leave without saving?'} closeText={'Cancel'} submitText={'Yes'} onSubmit={() => { setNoteIndex(nextNoteIndex); setLeaveNoteDialogOpen(false) }} dialogOpen={leaveNoteDialogOpen} onClose={() => { setLeaveNoteDialogOpen(false) }} />
             <ConfirmationDialog title={'Delete Note'} body={'Are you sure you want to delete note?'} closeText={'Cancel'} submitText={'Delete'} onSubmit={() => { handleDeleteNote() }} dialogOpen={deleteNoteDialogOpen} onClose={() => { setDeleteNoteDialogOpen(false) }} />
         </>

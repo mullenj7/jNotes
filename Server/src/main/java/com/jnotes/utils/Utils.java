@@ -33,6 +33,7 @@ public class Utils {
         noteDTO.setLastUpdated(note.getLastUpdated());
         noteDTO.setContent(note.getContent());
         noteDTO.setTitle(note.getTitle());
+        noteDTO.setFavourite(note.getFavourite());
         return noteDTO;
     }
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { Box, Card, CardContent, Typography, CardActions, Button, CardActionArea, CardHeader } from '@mui/material'
+import { Box, Card, CardContent, Typography, CardActions, Button, CardActionArea, Grid, ListItemButton } from '@mui/material'
 import { Slate, withReact, Editable } from "slate-react"
 import { withHistory } from 'slate-history'
 import { Editor, Node, Transforms, createEditor, select } from 'slate'
 
 
 
-const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, searchText, }) => {
+const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, searchText='', isFullscreen = false }) => {
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
     const [showNote, setShowNote] = useState(true)
@@ -29,7 +29,7 @@ const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, s
         }
     }, [note])
 
-    useEffect(() => {
+    useEffect(() => { // filter by search text
         setShowNote(false)
         const allText = editor.children // get all text in note
             .map((node) => Editor.string(editor, [], { from: [editor.children.indexOf(node)] }) || Node.string(node))
@@ -44,34 +44,35 @@ const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, s
 
 
     return (
+        <Grid size={4} sx={{ display: ((searchText !== '' && showNote === true) || (searchText === '')) ? 'auto' : 'none' }}>
+            <Card sx={{ m: 2, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', bgcolor: 'purple', overflow: 'hidden', }}>
+                <ListItemButton sx={{ p: 0, m: 0 }} autoFocus={selectedIndex === index ? true : false}>
+                    <CardActionArea
+                        onClick={() => handleClick()}
+                        data-active={selectedIndex === index ? '' : undefined}
+                        sx={{
+                            height: '100%',
+                            display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'flex-start', overflow: 'hidden',
+                            '&[data-active]': {
+                                backgroundColor: 'white',
+                                '&:hover': {
+                                    backgroundColor: 'action.selectedHover',
+                                },
+                            },
+                        }}
+                    >
+                        <CardContent sx={{ bgcolor: 'red', m: 1, overflow: 'hidden', height: 200, }}>
+                            <Typography noWrap variant='subtitle2' gutterBottom sx={{ color: 'text.secondary', maxWidth: 150 }}>
+                                {note.title}
+                            </Typography>
+                            <Typography variant='subtitle2' sx={{ color: 'text.secondary', mb: 1.5, }}>
+                                {(date)}
+                            </Typography>
+                            <Slate editor={editor} initialValue={initialNoteValue}>
+                                <Editable readOnly />
+                            </Slate>
 
-        <Card sx={{ m: 2, display: ((searchText !== '' && showNote === true) || (searchText === '')) ? 'flex' : 'none', justifyContent: 'flex-start', alignItems: 'flex-start', bgcolor: 'purple', overflow: 'hidden', }}>
-            <CardActionArea
-                onClick={() => handleClick()}
-                data-active={selectedIndex === index ? '' : undefined}
-                sx={{
-                    height: '100%',
-                    display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'flex-start', overflow: 'hidden',
-                    '&[data-active]': {
-                        backgroundColor: 'action.selected',
-                        '&:hover': {
-                            backgroundColor: 'action.selectedHover',
-                        },
-                    },
-                }}
-            >
-                <CardContent sx={{ bgcolor: 'red', m: 1, overflow: 'hidden', height: 200, }}>
-                    <Typography noWrap variant='subtitle2' gutterBottom sx={{ color: 'text.secondary', maxWidth: 150 }}>
-                        {note.title}
-                    </Typography>
-                    <Typography variant='subtitle2' sx={{ color: 'text.secondary', mb: 1.5, }}>
-                        {(date)}
-                    </Typography>
-                    <Slate editor={editor} initialValue={initialNoteValue}>
-                        <Editable readOnly />
-                    </Slate>
-
-                    {/* <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                            {/* <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
                         {note.title}
                     </Typography>
                     <Typography variant="h5" component="div">
@@ -83,12 +84,14 @@ const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, s
                         <br />
                         {'"a benevolent smile"'}
                     </Typography> */}
-                </CardContent>
-            </CardActionArea>
-            {/* <CardActions>
+                        </CardContent>
+                    </CardActionArea>
+                    {/* <CardActions>
                 <Button size="small">Learn More</Button>
             </CardActions> */}
-        </Card>
+                </ListItemButton>
+            </Card>
+        </Grid>
     )
 }
 
