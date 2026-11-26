@@ -26,12 +26,29 @@ public class NoteServiceImplementation implements NoteServiceInterface {
     @Autowired
     UserRepository userRepository;
 
-    @Override
+    // @Override
+    // public ResponseDTO getAllUserNotes(Long userId, Pageable page) { // Need to test different paging options
+    //     ResponseDTO response = new ResponseDTO();
+    //     try {
+    //         Page<NoteDTO> notes = noteRepository.findAllByUserId(userId, page).map(Utils::mapNoteEntityToNoteDTO);
+    //         response.setNotes(notes.getContent());
+    //         response.setStatusCode(200);
+    //         return response;
+    //     } catch (Exception e) {
+    //         response.setStatusCode(500);
+    //         response.setMessage("Error Getting Notes " + e.getMessage());
+    //         return response;
+    //     }
+    // }
+
+     @Override
     public ResponseDTO getAllUserNotes(Long userId, Pageable page) { // Need to test different paging options
         ResponseDTO response = new ResponseDTO();
         try {
-            Page<NoteDTO> notes = noteRepository.findByUserId(userId, page).map(Utils::mapNoteEntityToNoteDTO);
-            response.setNotes(notes.getContent());
+            User user = userRepository.findById(userId).orElseThrow(() -> new Exception());
+            List<Note> notes = user.getNotes();
+            List<NoteDTO> notesDTO = Utils.mapNoteListEntityToNoteListDTO(notes);
+            response.setNotes(notesDTO);
             response.setStatusCode(200);
             return response;
         } catch (Exception e) {

@@ -6,7 +6,7 @@ import { Editor, Node, Transforms, createEditor, select } from 'slate'
 
 
 
-const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, searchText='', isFullscreen = false }) => {
+const MiniNote = ({ note, handleClick, index, selectedIndex, initialNoteValue, searchText = '', isFullscreen = false }) => {
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
     const [showNote, setShowNote] = useState(true)

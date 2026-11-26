@@ -85,7 +85,6 @@ function UsersProvider(props) {
         try {
             setLoading(true)
             const response = await getUserNotes();
-            console.log(response)
             setUserNotes((response));
             setLoading(false)
 

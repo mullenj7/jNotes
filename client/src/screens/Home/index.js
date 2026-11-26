@@ -3,7 +3,7 @@ import { Box, IconButton, TextField, Dialog, Drawer, DrawerHeader, Button } from
 import { styled, useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
 import Note from '../../components/Note'
 import NoteList from '../../components/Lists/NoteList'
@@ -37,7 +37,6 @@ const Home = () => {
             content: JSON.stringify(editorNote.children),
             favourite: favourite
         }
-        console.log('body is ',body)
         await updateNoteDetails(selectedNote.id, body)
         await getAllNotes()
     }
@@ -99,17 +98,17 @@ const Home = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', flexDirection: 'row', bgcolor: 'red', py: 5, height: '70vh', filter: newNoteDialogOpen ? 'blur(2px)' : 'none' }}>
-                <Box sx={{ bgcolor: 'blue', width: drawerOpen ? '20%' : '5%', display: 'flex', flexDirection: 'column', ml: 3 }}>
+            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-start', flexDirection: 'row', bgcolor: 'red', py: { lg: 1, xl: 5 }, height: '70vh', filter: newNoteDialogOpen ? 'blur(2px)' : 'none', }}>
+                <Box sx={{ bgcolor: 'blue', width: drawerOpen ? '20%' : '5%', display: 'flex', flexDirection: 'column', }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', bgcolor: 'white', }}>
                         {drawerOpen ?
                             <>
                                 <Button variant='outlined' fullWidth onClick={() => { setFullScreenNotesDialogOpen(true); }}>Browse Notes</Button>
                                 <IconButton onClick={() => { handleClickAddNote(); }}>
-                                    <AddBoxOutlinedIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
+                                    <AddIcon fontSize="small" sx={{ color: 'blue', border: 2, borderRadius: '15%' }} />
                                 </IconButton>
                                 <IconButton onClick={() => { setDrawerOpen(!drawerOpen); }}>
-                                    <ChevronLeftIcon fontSize="small" sx={{ color: 'blue', p: 0, m: 0, }} />
+                                    <ChevronLeftIcon fontSize="small" sx={{ color: 'blue', }} />
                                 </IconButton>
                             </>
                             :
@@ -119,13 +118,18 @@ const Home = () => {
                     </Box>
                     {/* <Collapse orientation='horizontal' in={drawerOpen} > */}
                     {drawerOpen &&
-                        <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex}
-                            initialNoteValue={initialNoteValue} />
+                        (
+                            userNotes.length > 0 ?
+                                <NoteList notes={userNotes} setNoteIndex={setNoteIndex} noteIndex={noteIndex} enableSave={enableSave} setLeaveNoteDialogOpen={setLeaveNoteDialogOpen} setNextNoteIndex={setNextNoteIndex}
+                                    initialNoteValue={initialNoteValue} />
+                                : <Box></Box>
+                        )
+
                     }
                     {/* </Collapse> */}
 
                 </Box>
-                <Box sx={{ bgcolor: 'green', width: drawerOpen ? '80%' : '95%', mr: 3, display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ bgcolor: 'green', width: drawerOpen ? '80%' : '95%', display: 'flex', flexDirection: 'column' }}>
                     {!newNoteDialogOpen &&
                         <Note handleSave={handleSaveNote} selectedNote={selectedNote} setSelectedNote={setSelectedNote} initialNoteValue={initialNoteValue} setDeleteNoteDialogOpen={setDeleteNoteDialogOpen} enableSave={enableSave} setEnableSave={setEnableSave} />}
                 </Box>

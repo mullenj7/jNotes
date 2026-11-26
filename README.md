@@ -6,3 +6,4 @@ A work in progress note keeping web app with Spring Boot backend and React front
 TODO: 
     - Add full plain text variable to notes in backend for faster searching in app
     - Add error catch component
+    - Add handling for sign up with existing address etc
